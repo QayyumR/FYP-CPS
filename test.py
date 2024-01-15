@@ -11,7 +11,7 @@ colour = (0, 255, 0)
 font = cv2.FONT_HERSHEY_SIMPLEX
 scale = 1
 thickness = 2
-camera = Camera()
+
 
 def draw_barcodes(request):
     with MappedArray(request, "main") as m:
