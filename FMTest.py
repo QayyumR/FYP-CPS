@@ -91,6 +91,7 @@ def send_to_api(data):
 
         if response.status_code == 200:
             print("Data sent successfully to the API.")
+	    print(f"Posted data: {data}, Server response: {response.json()}")
         else:
             print(f"Failed to send data to the API. Status code: {response.status_code}")
     except Exception as e:
