@@ -1,37 +1,46 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
+import serial
+import RPi.GPIO as GPIO
+import os
+import sys
+import time
+import string
+from subprocess import Popen
+ser = serial.Serial(
+       # port='/dev/ttyS0', #Replace ttyS0 with ttyAM0 for Pi1,Pi2,Pi0
 
-import cv2
-from pyzbar.pyzbar import decode
+        port='/dev/ttyUSB0',
+#	port='/dev/ttyS0',
+        baudrate = 38400,
+        
+        
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        timeout=1
+)
 
-from picamera2 import MappedArray, Picamera2, Preview
-from libcamera import controls
-from libcamera import Transform
+#movie1 = ("/home/pi/Videos/1.mp4")
+#movie2 = ("/home/pi/Videos/2.mp4")
+print("Program started!")
+while 1:
 
-colour = (0, 255, 0)
-font = cv2.FONT_HERSHEY_SIMPLEX
-scale = 1
-thickness = 2
-
-
-def draw_barcodes(request):
-    with MappedArray(request, "main") as m:
-        for b in barcodes:
-            if b.polygon:
-                x = min([p.x for p in b.polygon])
-                y = min([p.y for p in b.polygon]) - 30
-                cv2.putText(m.array, b.data.decode('utf-8'), (x, y), font, scale, colour, thickness)
-
-picam2 = Picamera2()
-picam2.start_preview(Preview.QTGL)
-config = picam2.create_preview_configuration(main={"size": (640, 480)}, transform=Transform(hflip=True, vflip=True))
-picam2.configure(config)
-
-
-barcodes = []
-picam2.post_callback = draw_barcodes
-picam2.start()
-
-
-while True:
-    rgb = picam2.capture_array("main")
-    barcodes = decode(rgb)
+#	print(ser.name)
+#        y=ser.readline()
+	y=ser.read(ser.inWaiting())
+	time.sleep(0.01)
+#        print x
+y_str = y.decode('utf-8')
+x = y_str.replace("U", "")
+	
+print (x)
+time.sleep(1)
+	
+if x == '3000E2000019060C01360510E09F488D':
+        print("A")
+        time.sleep(3)
+elif x == '3000E2000019060C00770650D633EB30':
+        print("B")
+        time.sleep(3)
+else:
+        print("none")
